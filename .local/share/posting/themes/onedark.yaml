@@ -1,0 +1,12 @@
+
+name: one-dark
+primary: '#61afef'     # matches Kitty's blue, used for buttons and highlights
+secondary: '#d19a66'   # amber-orange, for secondary emphasis
+accent: '#e06c75'      # warm red accent for cursors/focus/highlights
+background: '#282c34'  # main background
+surface: '#2c323c'     # panels, tables, etc. slightly lighter than background
+error: '#be5046'       # strong red for errors
+success: '#98c379'     # green from Kitty
+warning: '#e5c07b'     # yellow from Kitty
+text: '#cccccc'        # main text color
+muted: '#979eab'       # dimmed or secondary text
