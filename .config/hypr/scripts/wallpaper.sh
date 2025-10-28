@@ -4,7 +4,7 @@
 # Cycles through 8 frames between 8 AM and 2 AM using swww
 
 # --- CONFIG ---
-WALLPAPER_DIR="$HOME/Pictures/Wallpapers/catalina_frames"
+WALLPAPER_DIR="$HOME/.wallpapers/catalina_frames"
 FRAMES=8
 START_HOUR=8       # 8 AM
 END_HOUR=2         # 2 AM (next day)
