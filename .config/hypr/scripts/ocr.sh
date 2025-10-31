@@ -14,11 +14,11 @@ if grim -g "$(slurp)" "$TMP_IMG"; then
     # Handle OCR result
     if [ -n "$TEXT" ]; then
         echo "$TEXT" | wl-copy
-        notify-send "📝 OCR Complete" "Text copied to clipboard."
+        notify-send "OCR Complete" "Text copied to clipboard."
     else
-        notify-send "⚠️ OCR Failed" "No readable text found."
+        notify-send "OCR Failed" "No readable text found."
     fi
 else
-    notify-send "❌ OCR Cancelled" "No area selected."
+    notify-send "OCR Cancelled" "No area selected."
 fi
 
