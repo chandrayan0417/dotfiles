@@ -1,4 +1,4 @@
-heme: one-dark
+theme: one-dark
 layout: horizontal
 response:
   prettify_json: true
