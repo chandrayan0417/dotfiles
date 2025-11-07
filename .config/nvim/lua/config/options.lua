@@ -59,3 +59,16 @@ vim.api.nvim_create_autocmd("FileType", {
 		vim.opt_local.formatoptions:remove({ "c", "r", "o" })
 	end,
 })
+
+-- keep cursor centered while typing
+vim.api.nvim_create_autocmd({ "InsertEnter" }, {
+	callback = function()
+		vim.opt.scrolloff = 999
+	end,
+})
+
+vim.api.nvim_create_autocmd({ "InsertLeave" }, {
+	callback = function()
+		vim.opt.scrolloff = 8 -- normal value when not typing
+	end,
+})
