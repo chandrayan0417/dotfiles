@@ -48,3 +48,10 @@ vim.keymap.set("n", "<A-Tab>", "<cmd>bnext<CR>", { desc = "Next buffer" })
 vim.keymap.set("n", "<Tab>", "<cmd>b#<CR>", { desc = "Last buffer" })
 vim.keymap.set("n", "Q", "<C-w>c", { desc = "Close current split" })
 vim.keymap.set("n", "Q", "<cmd>bd<CR>", { desc = "Close buffer" })
+
+vim.api.nvim_create_autocmd("FileType", {
+	group = vim.api.nvim_create_augroup("no_auto_comment", {}),
+	callback = function()
+		vim.opt_local.formatoptions:remove({ "c", "r", "o" })
+	end,
+})

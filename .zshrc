@@ -47,6 +47,7 @@ fi
 # -----------------------------
 # Environment Variables
 # -----------------------------
+source /usr/share/nvm/init-nvm.sh
 export ZSH="$HOME/.oh-my-zsh"
 export EDITOR="nvim"
 export VISUAL="nvim"
@@ -181,15 +182,19 @@ wdev() {
     esac
   fi
 
-  tmux new-session -d -s "$SESSION" -c "$PROJECT_DIR" || { echo "Failed to create tmux session"; return 1; }
+  tmux new-session -d -s "$SESSION" -c "$PROJECT_DIR"
   tmux rename-window -t "$SESSION:0" 'nvim'
   tmux send-keys -t "$SESSION:0" 'nvim .' C-m
-  tmux new-window -t "$SESSION:1" -n 'server' -c "$PROJECT_DIR" || { echo "Failed to create server window"; return 1; }
+  tmux new-window -t "$SESSION:1" -n 'server' -c "$PROJECT_DIR"
   tmux send-keys -t "$SESSION:1" 'pnpm dev' C-m
   tmux split-window -h -t "$SESSION:1" -c "$PROJECT_DIR"
+  tmux new-window -t "$SESSION:2" -n 'opencode' -c "$PROJECT_DIR"
+  tmux send-keys -t "$SESSION:2" 'opencode' C-m
+  tmux new-window -t "$SESSION:3" -n 'api client' -c "$PROJECT_DIR"
+  tmux send-keys -t "$SESSION:3" 'posting' C-m
 
   # Open project with error detection
-  (pnpm install) || echo "Warning: 'pnpm install' failed or incomplete."
+  # (pnpm install) || echo "Warning: 'pnpm install' failed or incomplete."
 
   # Attach to session
   tmux select-window -t "$SESSION:0"

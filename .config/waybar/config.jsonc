@@ -91,7 +91,7 @@
     "format-disabled": "󰂲",
     "format-connected": " {device_alias}",
     "tooltip-format": "Devices connected: {num_connections}",
-    "on-click": "$TERMINAL -T bluetui -e bluetui"
+    "on-click": "$TERMINAL -e bluetui"
   },
 
   "pulseaudio": {
