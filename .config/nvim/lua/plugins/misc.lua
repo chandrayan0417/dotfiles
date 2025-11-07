@@ -8,6 +8,12 @@ return {
 	},
 	{
 		"j-hui/fidget.nvim",
-		opts = {},
+		opts = {
+			notification = {
+				window = {
+					winblend = 0,
+				},
+			},
+		},
 	},
 }
