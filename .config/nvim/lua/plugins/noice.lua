@@ -37,7 +37,7 @@ return {
 			lsp = {
 				message = {
 					-- Messages shown by lsp servers
-					enabled = true,
+					enabled = false,
 					view = "mini",
 				},
 			},
@@ -51,7 +51,7 @@ return {
 				},
 				mini = {
 					-- timeout = 5000, -- timeout in milliseconds
-					timeout = 2000,
+					timeout = 5000,
 					align = "center",
 					position = {
 						-- Centers messages top to bottom

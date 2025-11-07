@@ -2,6 +2,10 @@
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "
 
+-- Enable filetype detection
+vim.cmd("filetype on")
+vim.cmd("filetype plugin indent on")
+
 -- Tabs & indentation
 vim.opt.tabstop = 4
 vim.opt.softtabstop = 4
