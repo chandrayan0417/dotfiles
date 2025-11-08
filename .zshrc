@@ -7,14 +7,17 @@ fi
 # --- Environment variables ---
 # Lazy load nvm to avoid slow startup
 export NVM_DIR="$HOME/.nvm"
-lazy_load_nvm() {
-  [ -s "/usr/share/nvm/init-nvm.sh" ] && . /usr/share/nvm/init-nvm.sh
-  unfunction lazy_load_nvm
+_lazy_load_nvm_once() {
+  [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
+  [ -s "$NVM_DIR/bash_completion" ] && . "$NVM_DIR/bash_completion"
+  unset -f _lazy_load_nvm_once
 }
-alias node='lazy_load_nvm && node'
-alias npm='lazy_load_nvm && npm'
-alias npx='lazy_load_nvm && npx'
-alias pnpm='lazy_load_nvm && pnpm'
+# Safe wrappers: call loader only if it still exists, then exec real command
+nvm()  { command -v _lazy_load_nvm_once >/dev/null 2>&1 && _lazy_load_nvm_once; command nvm  "$@"; }
+node() { command -v _lazy_load_nvm_once >/dev/null 2>&1 && _lazy_load_nvm_once; command node "$@"; }
+npm()  { command -v _lazy_load_nvm_once >/dev/null 2>&1 && _lazy_load_nvm_once; command npm  "$@"; }
+npx()  { command -v _lazy_load_nvm_once >/dev/null 2>&1 && _lazy_load_nvm_once; command npx  "$@"; }
+pnpm() { command -v _lazy_load_nvm_once >/dev/null 2>&1 && _lazy_load_nvm_once; command pnpm "$@"; }
 
 export ZSH="$HOME/.oh-my-zsh"
 export EDITOR="nvim"
@@ -79,6 +82,7 @@ alias gcam='git commit -a -m'
 alias gcad='git commit -a --amend'
 alias update="yay -Syu"
 alias grep="grep --color=auto"
+alias typecheck="tsc --noEmit --watch"
 
 # --- Completion & history ---
 autoload -Uz compinit
