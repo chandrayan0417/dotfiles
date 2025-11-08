@@ -91,7 +91,7 @@
     "format-disabled": "󰂲",
     "format-connected": " {device_alias}",
     "tooltip-format": "Devices connected: {num_connections}",
-    "on-click": "$TERMINAL -e bluetui"
+    "on-click": "omarchy-launch-floating-terminal-with-presentation bluetui"
   },
 
   "pulseaudio": {
