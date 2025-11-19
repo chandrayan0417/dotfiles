@@ -96,7 +96,7 @@
 
   "pulseaudio": {
     "format": "{icon} {volume}%",
-    "on-click": "$TERMINAL --class=Wiremix -e wiremix",
+    "on-click": "omarchy-launch-floating-terminal-with-presentation wiremix",
     "on-click-right": "pamixer -t",
     "tooltip-format": "Playing at {volume}%",
     "scroll-step": 5,
