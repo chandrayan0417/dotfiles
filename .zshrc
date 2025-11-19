@@ -5,19 +5,6 @@ if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]
 fi
 
 # --- Environment variables ---
-# Lazy load nvm to avoid slow startup
-export NVM_DIR="$HOME/.nvm"
-_lazy_load_nvm_once() {
-  [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
-  [ -s "$NVM_DIR/bash_completion" ] && . "$NVM_DIR/bash_completion"
-  unset -f _lazy_load_nvm_once
-}
-# Safe wrappers: call loader only if it still exists, then exec real command
-nvm()  { command -v _lazy_load_nvm_once >/dev/null 2>&1 && _lazy_load_nvm_once; command nvm  "$@"; }
-node() { command -v _lazy_load_nvm_once >/dev/null 2>&1 && _lazy_load_nvm_once; command node "$@"; }
-npm()  { command -v _lazy_load_nvm_once >/dev/null 2>&1 && _lazy_load_nvm_once; command npm  "$@"; }
-npx()  { command -v _lazy_load_nvm_once >/dev/null 2>&1 && _lazy_load_nvm_once; command npx  "$@"; }
-pnpm() { command -v _lazy_load_nvm_once >/dev/null 2>&1 && _lazy_load_nvm_once; command pnpm "$@"; }
 
 export ZSH="$HOME/.oh-my-zsh"
 export EDITOR="nvim"
@@ -100,6 +87,8 @@ zstyle ':completion:*' matcher-list 'm:{a-z}={A-Z}'
 zstyle ':completion:*' list-colors ''
 zstyle ':completion:*' menu select
 zstyle ':fzf-tab:complete:*' fzf-preview 'ls --color=always $realpath'
+zstyle ':completion:*:tmux:*' fzf-preview 'tmux list-windows -t $word'
+zstyle ':completion:*:tmux:*' sort false
 
 # --- Functions ---
 n() { [[ $# -eq 0 ]] && nvim . || nvim "$@"; }
@@ -142,7 +131,36 @@ wdev() {
   tmux attach -t "$SESSION"
 }
 
-tmkill() {
+_tm() {
+  _arguments -C \
+    '1:session name:->sessions'
+
+  case $state in
+    sessions)
+      compadd -- $(tmux list-sessions -F "#S")
+      ;;
+  esac
+}
+
+compdef _tm tm-attach
+compdef _tm tm-kill
+
+tm-attach() {
+  if [[ -n "$1" ]]; then
+    tmux attach -t "$1"
+    return
+  fi
+
+  if [[ $ZSH_EVAL_CONTEXT == *"cmdarg"* ]]; then
+    return 1
+  fi
+
+  session=$(tmux list-sessions -F '#S' 2>/dev/null | head -n1)
+tmux display-message -p "Attaching to: $session"
+tmux attach -t "$session"
+}
+
+tm-kill() {
   if [[ "$1" == "all" ]]; then
     tmux kill-server && echo "All tmux sessions killed."
   elif [[ -n "$1" ]]; then
