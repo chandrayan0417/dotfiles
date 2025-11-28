@@ -12,6 +12,7 @@ return {
 				typescriptreact = { "biomejs" },
 				json = { "biomejs" },
 				jsonc = { "biomejs" },
+				go = { "golangcilint" },
 			}
 
 			-- Create autocommand which carries out the actual linting

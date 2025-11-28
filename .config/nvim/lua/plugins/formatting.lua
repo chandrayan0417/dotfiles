@@ -18,6 +18,7 @@ return {
 				json = { "biome-check" },
 				css = { "biome-check" },
 				html = { "biome-check" },
+				go = { "goimports", "gofumpt", "golines" },
 			},
 			formatters = {
 				biome = {

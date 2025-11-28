@@ -26,6 +26,7 @@ return {
 					"lua_ls",
 					"emmet_ls",
 					"html",
+					"gopls",
 				},
 			})
 
@@ -36,6 +37,10 @@ return {
 					"tailwindcss-language-server",
 					"ts_ls",
 					"lua-language-server",
+					"gofumpt",
+					"goimports",
+					"golines",
+					"golangci-lint",
 				},
 				auto_update = false,
 				run_on_start = true,
@@ -53,6 +58,7 @@ return {
 					-- end,
 				},
 				cssls = { capabilities = capabilities },
+				gopls = { capabilities = capabilities },
 				jsonls = { capabilities = capabilities },
 				tailwindcss = {
 					capabilities = capabilities,
