@@ -1,12 +1,23 @@
 return {
 	{
 		"MeanderingProgrammer/render-markdown.nvim",
-		dependencies = { "nvim-treesitter/nvim-treesitter", "nvim-mini/mini.icons" }, -- if you use standalone mini plugins
-		---@module 'render-markdown'
-		---@type render.md.UserConfig
-		opts = {
-			render_modes = { "n", "c", "t" },
+		dependencies = {
+			"nvim-treesitter/nvim-treesitter",
+			"nvim-mini/mini.icons",
 		},
+		config = function()
+			require("render-markdown").setup({
+				latex = { enabled = false },
+				render_modes = { "n", "c", "t" },
+			})
+
+			vim.api.nvim_create_autocmd("FileType", {
+				pattern = "markdown",
+				callback = function(ev)
+					vim.treesitter.start(ev.buf, "markdown")
+				end,
+			})
+		end,
 	},
 	{
 		"iamcco/markdown-preview.nvim",
@@ -15,7 +26,7 @@ return {
 		build = ":call mkdp#util#install()",
 		keys = {
 			{
-				"<leader>m",
+				"<leader>M",
 				ft = "markdown",
 				"<cmd>MarkdownPreviewToggle<cr>",
 				desc = "Markdown Preview",
