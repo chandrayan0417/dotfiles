@@ -106,9 +106,10 @@ zd() {
 }
 alias cd="zd"
 
-wdev() {
+dev() {
   SESSION=$(basename "$PWD" | tr . _)
   PROJECT_DIR="$PWD"
+
   if tmux has-session -t "$SESSION" 2>/dev/null; then
     echo "Tmux session '$SESSION' already exists."
     read "confirm?Kill and recreate? (y/N): "
@@ -117,16 +118,23 @@ wdev() {
       *) tmux attach -t "$SESSION"; return ;;
     esac
   fi
+
   tmux new-session -d -s "$SESSION" -c "$PROJECT_DIR"
   tmux rename-window -t "$SESSION:1" 'nvim'
   tmux send-keys -t "$SESSION:1" 'nvim .' C-m
+
   tmux new-window -t "$SESSION:2" -n 'server' -c "$PROJECT_DIR"
-  tmux send-keys -t "$SESSION:2" 'pnpm dev' C-m
+  if [ -f "$PROJECT_DIR/package.json" ]; then
+    tmux send-keys -t "$SESSION:2" 'pnpm dev' C-m
+  fi
   tmux split-window -h -t "$SESSION:2" -c "$PROJECT_DIR"
+
   tmux new-window -t "$SESSION:3" -n 'opencode' -c "$PROJECT_DIR"
   tmux send-keys -t "$SESSION:3" 'opencode' C-m
+
   tmux new-window -t "$SESSION:4" -n 'api client' -c "$PROJECT_DIR"
   tmux send-keys -t "$SESSION:4" 'posting' C-m
+
   tmux select-window -t "$SESSION:1"
   tmux attach -t "$SESSION"
 }
