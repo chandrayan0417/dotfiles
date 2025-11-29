@@ -139,6 +139,71 @@ dev() {
   tmux attach -t "$SESSION"
 }
 
+
+commit-ai() {
+  if git diff --quiet && git diff --cached --quiet; then
+    echo "No changes detected."
+    return 0
+  fi
+
+  echo "Detected changes:"
+  git status -sb
+
+  echo
+  read -q "REPLY? Stage changes & generate message? (y/N): "
+  echo
+  [[ $REPLY =~ ^[Yy]$ ]] || {
+    echo "Canceled."
+    return 0
+  }
+
+  git add -A || return 1
+
+  local diff prompt commit_msg
+  diff=$(git diff --cached) || return 1
+
+  prompt=$'Write ONLY a Git commit message in Conventional Commits format:\n'\
+$'Types: feat, fix, docs, style, refactor, test, chore, perf, ci, build\n\n'\
+$'add description under 50 chars in next line. No commands. Plain text only:\n\n'"$diff"
+
+  commit_msg=$(
+    printf "%s" "$prompt" |
+      opencode run --log-level=ERROR |
+      tr -d '\r' |
+      sed 's/^"//;s/"$//'
+  )
+
+  if [[ -z $commit_msg ]] || echo "$commit_msg" | grep -qiE "(tool_call|git commit|bash|<.*>)"; then
+    echo "AI returned invalid or unsafe output. Aborting."
+    git restore --staged . &>/dev/null
+    return 1
+  fi
+
+  echo "Commit message:"
+  echo "$commit_msg"
+  echo
+  read -q "REPLY? Commit now? (y/N): "
+  echo
+  [[ $REPLY =~ ^[Yy]$ ]] || {
+    echo "Canceled. Unstaging changes."
+    git restore --staged . &>/dev/null
+    return 0
+  }
+
+  git commit -m "$commit_msg" || return 1
+  echo "Committed."
+
+  echo
+  read -q "REPLY? Push now? (y/N): "
+  echo
+  [[ $REPLY =~ ^[Yy]$ ]] || {
+    echo "Committed locally."
+    return 0
+  }
+
+  git push -u origin "$(git rev-parse --abbrev-ref HEAD)"
+}
+
 _tm() {
   _arguments -C \
     '1:session name:->sessions'
