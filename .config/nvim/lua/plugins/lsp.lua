@@ -27,6 +27,10 @@ return {
 					"emmet_ls",
 					"html",
 					"gopls",
+					"bashls",
+					"dockerls",
+					"gh_actions_ls",
+					"yamlls",
 				},
 			})
 
@@ -50,16 +54,15 @@ return {
 			local capabilities = require("blink.cmp").get_lsp_capabilities()
 
 			local servers = {
-				ts_ls = {
-					capabilities = capabilities,
-					-- on_attach = function(client, _)
-					-- 	-- Disable diagnostics for this LSP (as in your snippet)
-					-- 	client.handlers["textDocument/publishDiagnostics"] = function() end
-					-- end,
-				},
+				ts_ls = { capabilities = capabilities },
 				cssls = { capabilities = capabilities },
 				gopls = { capabilities = capabilities },
 				jsonls = { capabilities = capabilities },
+				yamlls = { capabilities = capabilities },
+				dockerls = { capabilities = capabilities },
+				bashls = { capabilities = capabilities },
+				emmet_ls = { capabilities = capabilities },
+				gh_actions_ls = { capabilities = capabilities },
 				tailwindcss = {
 					capabilities = capabilities,
 					filetypes = {
@@ -99,37 +102,29 @@ return {
 				html = { capabilities = capabilities },
 			}
 
-			-- Setup each LSP server
-			for name, opts in pairs(servers) do
-				lspconfig[name].setup(opts)
-			end
-
-			-- Workspace diagnostics integration from second config
-			vim.lsp.config("*", {
-				on_attach = function(client, bufnr)
-					if package.loaded["workspace-diagnostics"] then
-						require("workspace-diagnostics").populate_workspace_diagnostics(client, bufnr)
-					end
-				end,
+			-- Setup installed LSP servers with defaults, merging overrides
+			mason_lsp.setup({
+				handlers = {
+					function(server)
+						local opts = { capabilities = capabilities }
+						if servers[server] then
+							opts = vim.tbl_deep_extend("force", opts, servers[server])
+						end
+						require("lspconfig")[server].setup(opts)
+					end,
+				},
 			})
 
-			-- -- LSP keymaps on attach (see first config)
-			-- vim.api.nvim_create_autocmd("LspAttach", {
-			-- 	callback = function(args)
-			-- 		local bufnr = args.buf
-			-- 		local map = vim.keymap.set
-			-- 		local opts = { buffer = bufnr }
-			--
-			-- 		map("n", "gd", vim.lsp.buf.definition, opts)
-			-- 		map("n", "K", vim.lsp.buf.hover, opts)
-			-- 		map("n", "gi", vim.lsp.buf.implementation, opts)
-			-- 		map("n", "<leader>rn", vim.lsp.buf.rename, opts)
-			-- 		map("n", "<leader>ca", vim.lsp.buf.code_action, opts)
-			-- 		map("n", "<leader>f", function()
-			-- 			vim.lsp.buf.format({ async = true })
-			-- 		end, opts)
-			-- 	end,
-			-- })
+			-- Workspace diagnostics integration from second config
+			if vim.lsp and vim.lsp.config then
+				vim.lsp.config("*", {
+					on_attach = function(client, bufnr)
+						if package.loaded["workspace-diagnostics"] then
+							require("workspace-diagnostics").populate_workspace_diagnostics(client, bufnr)
+						end
+					end,
+				})
+			end
 		end,
 	},
 }

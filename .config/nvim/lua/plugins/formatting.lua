@@ -5,20 +5,19 @@ return {
 		cmd = { "ConformInfo" },
 		opts = {
 			notify_on_error = true,
-			-- format_on_save = {
-			-- 	timeout_ms = 500,
-			-- 	lsp_format = "fallback",
-			-- },
 			formatters_by_ft = {
 				lua = { "stylua" },
-				javascript = { "biome-check" },
-				javascriptreact = { "biome-check" },
-				typescript = { "biome-check" },
-				typescriptreact = { "biome-check" },
-				json = { "biome-check" },
-				css = { "biome-check" },
-				html = { "biome-check" },
+				javascript = { "biome" },
+				javascriptreact = { "biome" },
+				typescript = { "biome" },
+				typescriptreact = { "biome" },
+				json = { "biome" },
+				css = { "biome" },
+				html = { "biome" },
 				go = { "goimports", "gofumpt", "golines" },
+				sh = { "shfmt" },
+				bash = { "shfmt" },
+				zsh = { "shfmt" },
 			},
 			formatters = {
 				biome = {
@@ -33,9 +32,6 @@ return {
 				},
 			},
 		},
-		-- config = function(_, opts)
-		-- 	require("conform").setup(opts)
-		-- end,
 	},
 
 	{
