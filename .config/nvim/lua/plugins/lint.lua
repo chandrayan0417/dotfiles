@@ -5,15 +5,6 @@ return {
 		event = { "BufReadPre", "BufNewFile" },
 		config = function()
 			local lint = require("lint")
-			lint.linters_by_ft = {
-				javascript = { "biomejs" },
-				typescript = { "biomejs" },
-				javascriptreact = { "biomejs" },
-				typescriptreact = { "biomejs" },
-				json = { "biomejs" },
-				jsonc = { "biomejs" },
-				go = { "golangcilint" },
-			}
 
 			-- Create autocommand which carries out the actual linting
 			-- on the specified events.
